@@ -1,0 +1,55 @@
+[
+  {
+    "id": "1",
+    "name": "Website Redesign",
+    "description": "Redesign the company website with modern UI/UX principles",
+    "startDate": "2025-01-01",
+    "endDate": "2025-03-15",
+    "status": "active",
+    "priority": "high"
+  },
+  {
+    "id": "2",
+    "name": "Mobile App Development",
+    "description": "Create a cross-platform mobile application for customers",
+    "startDate": "2025-02-10",
+    "endDate": "2025-06-30",
+    "status": "active",
+    "priority": "medium"
+  },
+  {
+    "id": "3",
+    "name": "Database Migration",
+    "description": "Migrate legacy database to new cloud infrastructure",
+    "startDate": "2025-03-01",
+    "endDate": "2025-04-15",
+    "status": "completed",
+    "priority": "high"
+  },
+  {
+    "id": "4",
+    "name": "Brand Guidelines",
+    "description": "Develop comprehensive brand guidelines for consistency",
+    "startDate": "2025-01-15",
+    "endDate": "2025-02-28",
+    "status": "active",
+    "priority": "low"
+  },
+  {
+    "id": "5",
+    "name": "Marketing Campaign",
+    "description": "Plan and execute Q2 marketing campaign",
+    "startDate": "2025-04-01",
+    "endDate": "2025-06-30",
+    "status": "planned",
+    "priority": "medium"
+  },{
+    "id": "6",
+    "name": "Aza",
+    "description": "Aza and execute Q2 marketing campaign",
+    "startDate": "2025-04-01",
+    "endDate": "2025-06-30",
+    "status": "planned",
+    "priority": "medium"
+  }
+] 

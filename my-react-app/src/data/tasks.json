@@ -1,0 +1,142 @@
+[
+  {
+    "id": "101",
+    "projectId": "1",
+    "title": "Create wireframes",
+    "description": "Design initial wireframes for website layout",
+    "status": "done",
+    "priority": "medium",
+    "assignee": "Alex Johnson",
+    "dueDate": "2025-01-15"
+  },
+  {
+    "id": "102",
+    "projectId": "1",
+    "title": "Design mockups",
+    "description": "Create detailed design mockups based on approved wireframes",
+    "status": "doing",
+    "priority": "high",
+    "assignee": "Sarah Chen",
+    "dueDate": "2025-02-01"
+  },
+  {
+    "id": "103",
+    "projectId": "1",
+    "title": "Frontend implementation",
+    "description": "Implement frontend components based on designs",
+    "status": "todo",
+    "priority": "high",
+    "assignee": "Michael Rodriguez",
+    "dueDate": "2025-02-28"
+  },
+  {
+    "id": "104",
+    "projectId": "1",
+    "title": "Backend integration",
+    "description": "Connect frontend to backend APIs",
+    "status": "todo",
+    "priority": "medium",
+    "assignee": "Emily Kim",
+    "dueDate": "2025-03-10"
+  },
+  {
+    "id": "201",
+    "projectId": "2",
+    "title": "Define app requirements",
+    "description": "Document functional and non-functional requirements",
+    "status": "done",
+    "priority": "high",
+    "assignee": "David Lee",
+    "dueDate": "2025-02-20"
+  },
+  {
+    "id": "202",
+    "projectId": "2",
+    "title": "Create UI designs",
+    "description": "Design user interface for mobile app",
+    "status": "doing",
+    "priority": "high",
+    "assignee": "Sarah Chen",
+    "dueDate": "2025-03-15"
+  },
+  {
+    "id": "203",
+    "projectId": "2",
+    "title": "Develop authentication module",
+    "description": "Implement user registration and login functionality",
+    "status": "todo",
+    "priority": "medium",
+    "assignee": "Ryan Patel",
+    "dueDate": "2025-04-10"
+  },
+  {
+    "id": "301",
+    "projectId": "3",
+    "title": "Data analysis",
+    "description": "Analyze current database schema and data",
+    "status": "done",
+    "priority": "high",
+    "assignee": "Emily Kim",
+    "dueDate": "2025-03-10"
+  },
+  {
+    "id": "302",
+    "projectId": "3",
+    "title": "Setup new infrastructure",
+    "description": "Provision and configure new database servers",
+    "status": "done",
+    "priority": "high",
+    "assignee": "Jason Wu",
+    "dueDate": "2025-03-20"
+  },
+  {
+    "id": "303",
+    "projectId": "3",
+    "title": "Migrate data",
+    "description": "Transfer data from legacy to new database",
+    "status": "done",
+    "priority": "high",
+    "assignee": "Ryan Patel",
+    "dueDate": "2025-04-05"
+  },
+  {
+    "id": "401",
+    "projectId": "4",
+    "title": "Typography guidelines",
+    "description": "Define typography rules and font usage",
+    "status": "done",
+    "priority": "medium",
+    "assignee": "Sarah Chen",
+    "dueDate": "2025-01-30"
+  },
+  {
+    "id": "402",
+    "projectId": "4",
+    "title": "Color palette definition",
+    "description": "Create comprehensive color palette with usage rules",
+    "status": "doing",
+    "priority": "medium",
+    "assignee": "Michael Rodriguez",
+    "dueDate": "2025-02-15"
+  },
+  {
+    "id": "501",
+    "projectId": "5",
+    "title": "Market research",
+    "description": "Analyze target audience and competition",
+    "status": "todo",
+    "priority": "high",
+    "assignee": "David Lee",
+    "dueDate": "2025-04-15"
+  },
+  {
+    "id": "502",
+    "projectId": "5",
+    "title": "Campaign strategy",
+    "description": "Develop comprehensive marketing strategy",
+    "status": "todo",
+    "priority": "high",
+    "assignee": "Alex Johnson",
+    "dueDate": "2025-05-01"
+  }
+] 
