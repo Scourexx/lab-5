@@ -38,6 +38,7 @@ import {
   deleteTask,
 } from '../redux/tasksSlice';
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 import { formatDate } from '../utils/i18n';
 import PageHeader from '../components/common/PageHeader';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -56,6 +57,7 @@ const ProjectDetails = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { language, t } = useLanguage();
+  const { isDarkMode } = useTheme();
   const { message, modal } = App.useApp();
   
   const { projects, loading: projectsLoading, error: projectsError } = useSelector(state => state.projects);
@@ -210,6 +212,19 @@ const ProjectDetails = () => {
     ? Math.round((completedTasks / totalTasks) * 100) 
     : 0;
   
+  const getStatusLabel = (status) => {
+    switch(status) {
+      case 'active':
+        return t('projects.status.active');
+      case 'completed':
+        return t('projects.status.completed');
+      case 'planned':
+        return t('projects.status.planned');
+      default:
+        return status.charAt(0).toUpperCase() + status.slice(1);
+    }
+  };
+  
   const getStatusColor = (status) => {
     switch (status) {
       case 'active':
@@ -223,6 +238,52 @@ const ProjectDetails = () => {
     }
   };
   
+  const projectDetailsContainerStyle = {
+    display: 'flex',
+    overflowX: 'auto',
+    padding: '16px 0',
+    margin: '0 -8px',
+    minHeight: 'calc(100vh - 250px)'
+  };
+  
+  const renderStatusTag = (status, isDarkMode) => {
+    let color;
+    let textColor;
+    let backgroundColor;
+    
+    switch (status) {
+      case 'active':
+        color = isDarkMode ? undefined : 'blue';
+        backgroundColor = isDarkMode ? 'rgba(77, 150, 255, 0.15)' : undefined;
+        textColor = isDarkMode ? '#4D96FF' : '#1677FF';
+        break;
+      case 'completed':
+        color = isDarkMode ? undefined : 'green';
+        backgroundColor = isDarkMode ? 'rgba(107, 203, 119, 0.15)' : undefined;
+        textColor = isDarkMode ? '#6BCB77' : '#52C41A';
+        break;
+      case 'planned':
+        color = isDarkMode ? undefined : 'orange';
+        backgroundColor = isDarkMode ? 'rgba(255, 217, 61, 0.15)' : undefined;
+        textColor = isDarkMode ? '#FFD93D' : '#FA8C16';
+        break;
+      default:
+        color = isDarkMode ? undefined : 'default';
+        backgroundColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : undefined;
+        textColor = isDarkMode ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.85)';
+    }
+    
+    return {
+      color,
+      style: {
+        backgroundColor: isDarkMode ? backgroundColor : undefined,
+        color: textColor,
+        border: isDarkMode ? `1px solid ${backgroundColor}` : undefined,
+        fontWeight: 'bold'
+      }
+    };
+  };
+  
   return (
     <div>
       <PageHeader
@@ -230,8 +291,10 @@ const ProjectDetails = () => {
         subtitle={project.description}
         backButton
         tags={
-          <Tag color={getStatusColor(project.status)}>
-            {project.status.toUpperCase()}
+          <Tag 
+            {...renderStatusTag(project.status, isDarkMode)} 
+          >
+            {getStatusLabel(project.status)}
           </Tag>
         }
         extra={
@@ -263,8 +326,8 @@ const ProjectDetails = () => {
               column={{ xs: 1, sm: 2 }}
             >
               <Descriptions.Item label="Status">
-                <Tag color={getStatusColor(project.status)}>
-                  {project.status.toUpperCase()}
+                <Tag {...renderStatusTag(project.status, isDarkMode)}>
+                  {getStatusLabel(project.status)}
                 </Tag>
               </Descriptions.Item>
               <Descriptions.Item label="Priority">
@@ -303,7 +366,7 @@ const ProjectDetails = () => {
       </div>
       
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div style={{ display: 'flex', overflowX: 'auto', padding: '8px 0' }}>
+        <div style={projectDetailsContainerStyle}>
           {PROJECT_STATUSES.map(status => (
             <StatusColumn
               key={status}
@@ -332,7 +395,7 @@ const ProjectDetails = () => {
       </Modal>
       
       <Modal
-        title={editingTask ? t('editTask') : t('addTask')}
+        title={editingTask ? t('tasks.edit') : t('tasks.add')}
         open={isTaskModalVisible}
         onCancel={handleTaskModalCancel}
         footer={null}

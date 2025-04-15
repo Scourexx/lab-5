@@ -43,13 +43,5 @@
     "endDate": "2025-06-30",
     "status": "planned",
     "priority": "medium"
-  },{
-    "id": "6",
-    "name": "Aza",
-    "description": "Aza and execute Q2 marketing campaign",
-    "startDate": "2025-04-01",
-    "endDate": "2025-06-30",
-    "status": "planned",
-    "priority": "medium"
   }
 ] 

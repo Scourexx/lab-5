@@ -46,6 +46,7 @@ const LoadingSpinner = ({
     );
   }
   
+  // Basic spinner without tip to avoid the warning
   return (
     <div 
       style={{ 
@@ -53,13 +54,15 @@ const LoadingSpinner = ({
         justifyContent: 'center', 
         alignItems: 'center',
         padding: '40px 0',
+        flexDirection: 'column',
+        gap: '8px'
       }}
     >
       <Spin 
         indicator={antIcon} 
         size={size} 
-        tip={tip}
       />
+      {tip && <div style={{ marginTop: '8px' }}>{tip}</div>}
     </div>
   );
 };

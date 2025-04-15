@@ -42,13 +42,13 @@ const TaskForm = ({ initialValues, projectId, onFinish, onCancel, loading }) => 
     onFinish(taskData);
   };
   
-  const statusOptions = getStatusOptions(language).map(option => (
+  const statusOptions = getStatusOptions(t).map(option => (
     <Select.Option key={option.value} value={option.value}>
       {option.label}
     </Select.Option>
   ));
   
-  const priorityOptions = getPriorityOptions(language).map(option => (
+  const priorityOptions = getPriorityOptions(t).map(option => (
     <Select.Option key={option.value} value={option.value}>
       {option.label}
     </Select.Option>
@@ -75,7 +75,7 @@ const TaskForm = ({ initialValues, projectId, onFinish, onCancel, loading }) => 
       
       <Form.Item
         name="title"
-        label={t('title')}
+        label={t('tasks.title')}
         rules={[{ required: true, message: 'Please enter task title' }]}
       >
         <Input placeholder="Task title" />
@@ -83,14 +83,14 @@ const TaskForm = ({ initialValues, projectId, onFinish, onCancel, loading }) => 
       
       <Form.Item
         name="description"
-        label={t('description')}
+        label={t('tasks.description')}
       >
         <TextArea rows={3} placeholder="Task description" />
       </Form.Item>
       
       <Form.Item
         name="status"
-        label={t('status')}
+        label={t('tasks.status')}
         rules={[{ required: true, message: 'Please select task status' }]}
       >
         <Select>{statusOptions}</Select>
@@ -98,7 +98,7 @@ const TaskForm = ({ initialValues, projectId, onFinish, onCancel, loading }) => 
       
       <Form.Item
         name="priority"
-        label={t('priority')}
+        label={t('tasks.priority')}
         rules={[{ required: true, message: 'Please select task priority' }]}
       >
         <Select>{priorityOptions}</Select>
@@ -106,14 +106,14 @@ const TaskForm = ({ initialValues, projectId, onFinish, onCancel, loading }) => 
       
       <Form.Item
         name="assignee"
-        label={t('assignee')}
+        label={t('tasks.assignedTo')}
       >
         <Input placeholder="Assignee name" />
       </Form.Item>
       
       <Form.Item
         name="dueDate"
-        label={t('dueDate')}
+        label={t('tasks.dueDate')}
       >
         <DatePicker style={{ width: '100%' }} />
       </Form.Item>
@@ -121,9 +121,9 @@ const TaskForm = ({ initialValues, projectId, onFinish, onCancel, loading }) => 
       <Form.Item>
         <Space>
           <Button type="primary" htmlType="submit" loading={loading}>
-            {initialValues?.id ? t('editTask') : t('addTask')}
+            {initialValues?.id ? t('tasks.edit') : t('tasks.add')}
           </Button>
-          <Button onClick={onCancel}>Cancel</Button>
+          <Button onClick={onCancel}>{t('tasks.cancel')}</Button>
         </Space>
       </Form.Item>
     </Form>

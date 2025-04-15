@@ -7,17 +7,23 @@ const ThemeContext = createContext();
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
     const savedTheme = localStorage.getItem('theme');
-    return savedTheme || 'light';
+    return savedTheme || 'dark'; // Set dark as default theme
   });
+  
+  const isDarkMode = theme === 'dark';
   
   const toggleTheme = () => {
     setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
   };
   
+  const setDarkMode = () => setTheme('dark');
+  const setLightMode = () => setTheme('light');
+  
   useEffect(() => {
     localStorage.setItem('theme', theme);
     
     document.documentElement.style.colorScheme = theme;
+    document.body.className = theme === 'dark' ? 'dark-theme' : 'light-theme';
     
     Object.entries(getThemeVariables(theme)).forEach(([key, value]) => {
       document.documentElement.style.setProperty(key, value);
@@ -27,7 +33,14 @@ export const ThemeProvider = ({ children }) => {
   const themeConfig = getThemeConfig(theme);
   
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{
+      theme,
+      isDarkMode,
+      toggleTheme,
+      setDarkMode,
+      setLightMode,
+      themeConfig
+    }}>
       <ConfigProvider theme={themeConfig}>
         {children}
       </ConfigProvider>

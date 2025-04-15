@@ -8,14 +8,13 @@ import {
   ClockCircleOutlined,
 } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProjects, addProject, updateProject, deleteProject, setFilterCriteria } from '../redux/projectsSlice';
+import { fetchProjects, addProject, updateProject, deleteProject, setFilterCriteria, clearFilters } from '../redux/projectsSlice';
 import { fetchTasks } from '../redux/tasksSlice';
 import { useLanguage } from '../context/LanguageContext';
 import PageHeader from '../components/common/PageHeader';
 import ProjectCard from '../components/ui/ProjectCard';
 import ProjectForm from '../components/ui/ProjectForm';
 import LoadingSpinner from '../components/common/LoadingSpinner';
-import useFilteredProjects from '../hooks/useFilteredProjects';
 
 const { Search } = Input;
 const { Option } = Select;
@@ -23,18 +22,30 @@ const { Option } = Select;
 const Dashboard = () => {
   const dispatch = useDispatch();
   const { t } = useLanguage();
-  const { projects, filterCriteria, loading, error } = useSelector(state => state.projects);
+  const { projects, filteredProjects, loading, error } = useSelector(state => state.projects);
   const { allTasks } = useSelector(state => state.tasks);
   
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState(null);
+  const [priorityFilter, setPriorityFilter] = useState(null);
   
-  const displayedProjects = useFilteredProjects(projects, filterCriteria);
-  
+  // Fetch projects and tasks when the component mounts
   useEffect(() => {
     dispatch(fetchProjects());
     dispatch(fetchTasks());
+    dispatch(clearFilters()); // Reset filters on mount
   }, [dispatch]);
+  
+  // Apply filters when they change
+  useEffect(() => {
+    dispatch(setFilterCriteria({
+      status: statusFilter,
+      priority: priorityFilter,
+      searchQuery: searchQuery
+    }));
+  }, [dispatch, searchQuery, statusFilter, priorityFilter]);
   
   const showModal = (project = null) => {
     setEditingProject(project);
@@ -48,7 +59,7 @@ const Dashboard = () => {
   
   const handleFormSubmit = (values) => {
     if (editingProject) {
-      dispatch(updateProject(values));
+      dispatch(updateProject({ ...values, id: editingProject.id }));
     } else {
       dispatch(addProject(values));
     }
@@ -65,8 +76,16 @@ const Dashboard = () => {
     });
   };
   
-  const handleFilterChange = (key, value) => {
-    dispatch(setFilterCriteria({ [key]: value }));
+  const handleSearch = (value) => {
+    setSearchQuery(value);
+  };
+  
+  const handleStatusChange = (value) => {
+    setStatusFilter(value === 'all' ? null : value);
+  };
+  
+  const handlePriorityChange = (value) => {
+    setPriorityFilter(value === 'all' ? null : value);
   };
   
   const activeProjects = projects.filter(p => p.status === 'active').length;
@@ -74,18 +93,20 @@ const Dashboard = () => {
   const totalTasks = allTasks.length;
   const completedTasks = allTasks.filter(t => t.status === 'done').length;
   
+  const displayedProjects = filteredProjects;
+  
   return (
     <div>
       <PageHeader
-        title={t('dashboard')}
-        subtitle={t('projectOverview')}
+        title={t('dashboard.title')}
+        subtitle={t('dashboard.projects')}
         extra={
           <Button 
             type="primary" 
             icon={<PlusOutlined />} 
             onClick={() => showModal()}
           >
-            Add Project
+            {t('projects.actions.add')}
           </Button>
         }
       />
@@ -149,8 +170,9 @@ const Dashboard = () => {
             <Search
               placeholder="Search projects"
               allowClear
-              value={filterCriteria.search}
-              onChange={(e) => handleFilterChange('search', e.target.value)}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onSearch={handleSearch}
               style={{ width: '100%' }}
             />
           </Col>
@@ -158,8 +180,9 @@ const Dashboard = () => {
             <Select
               placeholder="Status"
               style={{ width: '100%' }}
-              value={filterCriteria.status}
-              onChange={(value) => handleFilterChange('status', value)}
+              value={statusFilter}
+              onChange={handleStatusChange}
+              allowClear
             >
               <Option value="all">All Statuses</Option>
               <Option value="active">Active</Option>
@@ -171,13 +194,14 @@ const Dashboard = () => {
             <Select
               placeholder="Priority"
               style={{ width: '100%' }}
-              value={filterCriteria.priority}
-              onChange={(value) => handleFilterChange('priority', value)}
+              value={priorityFilter}
+              onChange={handlePriorityChange}
+              allowClear
             >
               <Option value="all">All Priorities</Option>
-              <Option value="low">{t('low')}</Option>
-              <Option value="medium">{t('medium')}</Option>
-              <Option value="high">{t('high')}</Option>
+              <Option value="low">{t('projects.low')}</Option>
+              <Option value="medium">{t('projects.medium')}</Option>
+              <Option value="high">{t('projects.high')}</Option>
             </Select>
           </Col>
         </Row>
@@ -185,7 +209,7 @@ const Dashboard = () => {
       
       {loading ? (
         <LoadingSpinner />
-      ) : displayedProjects.length > 0 ? (
+      ) : displayedProjects && displayedProjects.length > 0 ? (
         <Row gutter={16}>
           {displayedProjects.map(project => (
             <Col xs={24} sm={12} lg={8} key={project.id}>
@@ -199,13 +223,13 @@ const Dashboard = () => {
         </Row>
       ) : (
         <Empty
-          description="No projects found"
+          description={t('projects.empty')}
           image={Empty.PRESENTED_IMAGE_SIMPLE}
         />
       )}
       
       <Modal
-        title={editingProject ? "Edit Project" : "Add Project"}
+        title={editingProject ? t('projects.actions.edit') : t('projects.actions.add')}
         open={isModalVisible}
         onCancel={handleCancel}
         footer={null}

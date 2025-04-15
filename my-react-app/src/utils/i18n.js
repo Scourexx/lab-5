@@ -76,7 +76,11 @@ export const translations = {
       delete: 'Delete Task',
       title: 'Title',
       description: 'Description',
-      status: 'Status',
+      status: {
+        todo: 'To Do',
+        doing: 'In Progress',
+        done: 'Done'
+      },
       priority: 'Priority',
       assignedTo: 'Assigned To',
       dueDate: 'Due Date',
@@ -87,6 +91,17 @@ export const translations = {
       updateSuccess: 'Task updated successfully',
       addSuccess: 'Task added successfully',
     },
+    settings: {
+      title: 'Settings',
+      appearance: 'Appearance',
+      theme: 'Theme',
+      language: 'Language',
+      lightMode: 'Light Mode',
+      darkMode: 'Dark Mode',
+      saveChanges: 'Save Changes',
+      saveSuccess: 'Settings saved successfully',
+    },
+    deleteConfirm: 'Are you sure you want to delete this?',
   },
   ru: {
     common: {
@@ -155,7 +170,11 @@ export const translations = {
       delete: 'Удалить задачу',
       title: 'Заголовок',
       description: 'Описание',
-      status: 'Статус',
+      status: {
+        todo: 'К выполнению',
+        doing: 'В процессе',
+        done: 'Выполнено'
+      },
       priority: 'Приоритет',
       assignedTo: 'Назначено',
       dueDate: 'Срок',
@@ -166,6 +185,17 @@ export const translations = {
       updateSuccess: 'Задача успешно обновлена',
       addSuccess: 'Задача успешно добавлена',
     },
+    settings: {
+      title: 'Настройки',
+      appearance: 'Внешний вид',
+      theme: 'Тема',
+      language: 'Язык',
+      lightMode: 'Светлая тема',
+      darkMode: 'Темная тема',
+      saveChanges: 'Сохранить изменения',
+      saveSuccess: 'Настройки успешно сохранены',
+    },
+    deleteConfirm: 'Вы уверены, что хотите удалить это?',
   },
 };
 
@@ -178,12 +208,24 @@ export const translate = (key, lang = 'en') => {
   const keys = key.split('.');
   let result = translations[lang];
   
-  for (const k of keys) {
-    result = result[k];
+  try {
+    for (const k of keys) {
+      if (!result || typeof result !== 'object') return key;
+      result = result[k];
+    }
+    
     if (result === undefined) return key;
+    
+    if (typeof result === 'object') {
+      console.warn(`Translation key "${key}" resolved to an object instead of a string`);
+      return key;
+    }
+    
+    return result;
+  } catch (error) {
+    console.warn(`Translation error for key "${key}":`, error);
+    return key;
   }
-  
-  return result || key;
 };
 
 // Format date based on locale
@@ -201,16 +243,35 @@ export const formatDate = (dateString, lang = 'en') => {
   }
 };
 
-// Get status options for dropdowns
+// Helper function to safely use translations
+const safeTranslate = (t, key, defaultValue) => {
+  if (typeof t === 'function') {
+    return t(key);
+  } else if (typeof t === 'string') {
+    // If t is a language code, use translate function
+    return translate(key, t);
+  } else {
+    return defaultValue;
+  }
+};
+
+// Get status options for task dropdowns
 export const getStatusOptions = (t) => [
-  { value: 'planned', label: t('projects.status.planned') },
-  { value: 'active', label: t('projects.status.active') },
-  { value: 'completed', label: t('projects.status.completed') },
+  { value: 'todo', label: safeTranslate(t, 'tasks.status.todo', 'To Do') },
+  { value: 'doing', label: safeTranslate(t, 'tasks.status.doing', 'In Progress') },
+  { value: 'done', label: safeTranslate(t, 'tasks.status.done', 'Done') },
+];
+
+// Get status options for project dropdowns
+export const getProjectStatusOptions = (t) => [
+  { value: 'planned', label: safeTranslate(t, 'projects.status.planned', 'Planned') },
+  { value: 'active', label: safeTranslate(t, 'projects.status.active', 'Active') },
+  { value: 'completed', label: safeTranslate(t, 'projects.status.completed', 'Completed') },
 ];
 
 // Get priority options for dropdowns
 export const getPriorityOptions = (t) => [
-  { value: 'low', label: t('projects.priority.low') },
-  { value: 'medium', label: t('projects.priority.medium') },
-  { value: 'high', label: t('projects.priority.high') },
+  { value: 'low', label: safeTranslate(t, 'projects.priority.low', 'Low') },
+  { value: 'medium', label: safeTranslate(t, 'projects.priority.medium', 'Medium') },
+  { value: 'high', label: safeTranslate(t, 'projects.priority.high', 'High') },
 ]; 

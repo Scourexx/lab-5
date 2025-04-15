@@ -65,6 +65,30 @@ const initialState = {
   error: null,
 };
 
+// Helper function to apply filters
+const applyFilters = (projects, criteria) => {
+  const { status, priority, searchQuery } = criteria;
+  
+  return projects.filter(project => {
+    // Status filter
+    if (status && project.status !== status) {
+      return false;
+    }
+    
+    // Priority filter
+    if (priority && project.priority !== priority) {
+      return false;
+    }
+    
+    // Search query filter (case-insensitive)
+    if (searchQuery && !project.name.toLowerCase().includes(searchQuery.toLowerCase())) {
+      return false;
+    }
+    
+    return true;
+  });
+};
+
 const projectsSlice = createSlice({
   name: 'projects',
   initialState,
@@ -78,15 +102,7 @@ const projectsSlice = createSlice({
         ...action.payload,
       };
 
-      const { status, priority, searchQuery } = state.filterCriteria;
-      const filtered = state.projects.filter(project => {
-        if (status && project.status !== status) return false;
-        if (priority && project.priority !== priority) return false;
-        if (searchQuery && !project.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-        return true;
-      });
-
-      state.filteredProjects = filtered;
+      state.filteredProjects = applyFilters(state.projects, state.filterCriteria);
     },
     clearFilters: (state) => {
       state.filterCriteria = {
@@ -94,7 +110,7 @@ const projectsSlice = createSlice({
         priority: null,
         searchQuery: '',
       };
-      state.filteredProjects = state.projects;
+      state.filteredProjects = [...state.projects];
     },
   },
   extraReducers: (builder) => {
@@ -122,7 +138,7 @@ const projectsSlice = createSlice({
       .addCase(addProject.fulfilled, (state, action) => {
         state.loading = false;
         state.projects.push(action.payload);
-        state.filteredProjects = state.projects;
+        state.filteredProjects = applyFilters(state.projects, state.filterCriteria);
       })
       .addCase(addProject.rejected, (state, action) => {
         state.loading = false;
@@ -142,7 +158,7 @@ const projectsSlice = createSlice({
           if (state.selectedProject?.id === action.payload.id) {
             state.selectedProject = action.payload;
           }
-          state.filteredProjects = state.projects;
+          state.filteredProjects = applyFilters(state.projects, state.filterCriteria);
         }
       })
       .addCase(updateProject.rejected, (state, action) => {
@@ -158,7 +174,7 @@ const projectsSlice = createSlice({
       .addCase(deleteProject.fulfilled, (state, action) => {
         state.loading = false;
         state.projects = state.projects.filter(project => project.id !== action.payload);
-        state.filteredProjects = state.projects;
+        state.filteredProjects = applyFilters(state.projects, state.filterCriteria);
         if (state.selectedProject?.id === action.payload) {
           state.selectedProject = null;
         }

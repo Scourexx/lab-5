@@ -13,7 +13,25 @@ const TaskCard = ({ task, index, onEdit, onDelete }) => {
   const { isDarkMode } = useTheme();
   
   const getPriorityColor = (priority) => {
-    return customStyles.priorityColors[priority] || '#1890ff';
+    return customStyles.priorityColors[priority] || '#4D96FF';
+  };
+  
+  const getStatusTagStyle = (status) => {
+    if (isDarkMode) {
+      return customStyles.statusTag[status] || {};
+    } else {
+      // Light mode specific styles
+      switch(status) {
+        case 'todo':
+          return { backgroundColor: '#E6F7FF', color: '#1677FF', border: '1px solid #91CAFF' };
+        case 'doing':
+          return { backgroundColor: '#FFF7E6', color: '#FA8C16', border: '1px solid #FFD591' };
+        case 'done':
+          return { backgroundColor: '#F6FFED', color: '#52C41A', border: '1px solid #B7EB8F' };
+        default:
+          return {};
+      }
+    }
   };
   
   const getInitials = (name) => {
@@ -41,24 +59,33 @@ const TaskCard = ({ task, index, onEdit, onDelete }) => {
           <Card
             size="small"
             style={{
-              ...customStyles.taskCard,
-              ...(snapshot.isDragging ? customStyles.taskCardDragging : {}),
+              ...(isDarkMode ? customStyles.taskCard.darkMode : customStyles.taskCard.lightMode),
+              ...(snapshot.isDragging ? { 
+                boxShadow: isDarkMode 
+                  ? '0 5px 15px rgba(0, 0, 0, 0.5)' 
+                  : '0 5px 15px rgba(0, 0, 0, 0.1)'
+              } : {}),
               borderLeft: `3px solid ${getPriorityColor(task.priority)}`,
-              backgroundColor: isDarkMode ? '#1f1f1f' : '#ffffff',
+              transition: 'all 0.2s ease',
             }}
             actions={[
-              <Tooltip title={t('editTask')} key="edit">
+              <Tooltip title={t('tasks.edit')} key="edit">
                 <EditOutlined key="edit" onClick={() => onEdit(task)} />
               </Tooltip>,
-              <Tooltip title={t('deleteTask')} key="delete">
-                <DeleteOutlined key="delete" onClick={() => onDelete(task.id)} style={{ color: '#f5222d' }} />
+              <Tooltip title={t('tasks.delete')} key="delete">
+                <DeleteOutlined key="delete" onClick={() => onDelete(task.id)} style={{ color: isDarkMode ? '#FF6B6B' : '#f5222d' }} />
               </Tooltip>,
             ]}
           >
             <Paragraph 
               strong 
               ellipsis={{ rows: 2 }}
-              style={{ margin: 0, fontSize: '14px', color: isDarkMode ? '#fff' : 'inherit' }}
+              style={{ 
+                margin: 0, 
+                fontSize: '14px', 
+                color: isDarkMode ? 'rgba(255, 255, 255, 0.95)' : 'rgba(0, 0, 0, 0.85)',
+                fontWeight: 500
+              }}
             >
               {task.title}
             </Paragraph>
@@ -66,18 +93,32 @@ const TaskCard = ({ task, index, onEdit, onDelete }) => {
             <Paragraph 
               type="secondary" 
               ellipsis={{ rows: 2 }}
-              style={{ fontSize: '12px', marginTop: '4px', marginBottom: '8px' }}
+              style={{ 
+                fontSize: '12px', 
+                marginTop: '4px', 
+                marginBottom: '8px',
+                color: isDarkMode ? 'rgba(255, 255, 255, 0.65)' : 'rgba(0, 0, 0, 0.65)'
+              }}
             >
               {task.description}
             </Paragraph>
             
             <Space direction="vertical" size="small" style={{ width: '100%' }}>
               <Space>
+                <Tag 
+                  style={getStatusTagStyle(task.status)}
+                  color={!isDarkMode && !getStatusTagStyle(task.status).color ? task.status === 'todo' ? 'blue' : task.status === 'doing' ? 'orange' : 'green' : undefined}
+                >
+                  {t(`tasks.status.${task.status}`) || task.status.toUpperCase()}
+                </Tag>
                 <Tag color={getPriorityColor(task.priority)}>
-                  {t(task.priority)}
+                  {t(`projects.${task.priority}`) || task.priority}
                 </Tag>
                 {task.dueDate && (
-                  <Text type="secondary" style={{ fontSize: '12px' }}>
+                  <Text type="secondary" style={{ 
+                    fontSize: '12px',
+                    color: isDarkMode ? 'rgba(255, 255, 255, 0.65)' : 'rgba(0, 0, 0, 0.65)' 
+                  }}>
                     <CalendarOutlined style={{ marginRight: '4px' }} />
                     {formatDate(task.dueDate, language)}
                   </Text>
@@ -88,11 +129,20 @@ const TaskCard = ({ task, index, onEdit, onDelete }) => {
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Avatar 
                     size="small" 
-                    style={{ marginRight: '8px', backgroundColor: '#1890ff' }}
+                    style={{ 
+                      marginRight: '8px', 
+                      backgroundColor: isDarkMode ? '#4D96FF' : '#1890ff',
+                      color: 'white' 
+                    }}
                   >
                     {getInitials(task.assignee)}
                   </Avatar>
-                  <Text style={{ fontSize: '12px' }}>{task.assignee}</Text>
+                  <Text style={{ 
+                    fontSize: '12px',
+                    color: isDarkMode ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.85)' 
+                  }}>
+                    {task.assignee}
+                  </Text>
                 </div>
               )}
             </Space>

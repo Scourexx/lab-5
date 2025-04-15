@@ -2,6 +2,7 @@ import { Form, Input, Select, DatePicker, Button, Space } from 'antd';
 import { useLanguage } from '../../context/LanguageContext';
 import { useEffect } from 'react';
 import dayjs from 'dayjs';
+import { getProjectStatusOptions, getPriorityOptions } from '../../utils/i18n';
 
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
@@ -42,6 +43,18 @@ const ProjectForm = ({ initialValues, onFinish, onCancel, loading }) => {
     onFinish(projectData);
   };
   
+  const statusOptions = getProjectStatusOptions(t).map(option => (
+    <Select.Option key={option.value} value={option.value}>
+      {option.label}
+    </Select.Option>
+  ));
+  
+  const priorityOptions = getPriorityOptions(t).map(option => (
+    <Select.Option key={option.value} value={option.value}>
+      {option.label}
+    </Select.Option>
+  ));
+  
   return (
     <Form
       form={form}
@@ -57,7 +70,7 @@ const ProjectForm = ({ initialValues, onFinish, onCancel, loading }) => {
     >
       <Form.Item
         name="name"
-        label={t('title')}
+        label={t('projects.form.name')}
         rules={[{ required: true, message: 'Please enter project name' }]}
       >
         <Input placeholder="Project name" />
@@ -65,7 +78,7 @@ const ProjectForm = ({ initialValues, onFinish, onCancel, loading }) => {
       
       <Form.Item
         name="description"
-        label={t('description')}
+        label={t('projects.form.description')}
         rules={[{ required: true, message: 'Please enter project description' }]}
       >
         <TextArea rows={4} placeholder="Project description" />
@@ -73,31 +86,23 @@ const ProjectForm = ({ initialValues, onFinish, onCancel, loading }) => {
       
       <Form.Item
         name="status"
-        label={t('status')}
+        label={t('projects.form.status')}
         rules={[{ required: true, message: 'Please select project status' }]}
       >
-        <Select>
-          <Select.Option value="planned">Planned</Select.Option>
-          <Select.Option value="active">Active</Select.Option>
-          <Select.Option value="completed">Completed</Select.Option>
-        </Select>
+        <Select>{statusOptions}</Select>
       </Form.Item>
       
       <Form.Item
         name="priority"
-        label={t('priority')}
+        label={t('projects.form.priority')}
         rules={[{ required: true, message: 'Please select project priority' }]}
       >
-        <Select>
-          <Select.Option value="low">{t('low')}</Select.Option>
-          <Select.Option value="medium">{t('medium')}</Select.Option>
-          <Select.Option value="high">{t('high')}</Select.Option>
-        </Select>
+        <Select>{priorityOptions}</Select>
       </Form.Item>
       
       <Form.Item
         name="dateRange"
-        label="Project Timeframe"
+        label={t('projects.form.dates')}
         rules={[{ required: true, message: 'Please select project dates' }]}
       >
         <RangePicker style={{ width: '100%' }} />
@@ -106,9 +111,9 @@ const ProjectForm = ({ initialValues, onFinish, onCancel, loading }) => {
       <Form.Item>
         <Space>
           <Button type="primary" htmlType="submit" loading={loading}>
-            {initialValues?.id ? 'Update Project' : 'Create Project'}
+            {initialValues?.id ? t('projects.actions.edit') : t('projects.actions.add')}
           </Button>
-          <Button onClick={onCancel}>Cancel</Button>
+          <Button onClick={onCancel}>{t('projects.form.cancel')}</Button>
         </Space>
       </Form.Item>
     </Form>

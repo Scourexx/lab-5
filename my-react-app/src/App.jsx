@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { ConfigProvider, App as AntApp } from 'antd';
 import { Provider } from 'react-redux';
 import store from './redux/store';
@@ -32,29 +32,27 @@ const AppWithProviders = () => {
   return (
     <ConfigProvider theme={themeConfig}>
       <AntApp>
-        <Router>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            
-            <Route 
-              path="/" 
-              element={
-                <ProtectedRoute>
-                  <AppLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<Navigate to="/dashboard" replace />} />
-              <Route path="dashboard" element={<Dashboard />} />
-              <Route path="project/:id" element={<ProjectDetails />} />
-              <Route path="settings" element={<Settings />} />
-            </Route>
-            
-            <Route path="/403" element={<Error403 />} />
-            <Route path="/500" element={<Error500 />} />
-            <Route path="*" element={<Error404 />} />
-          </Routes>
-        </Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          
+          <Route 
+            path="/" 
+            element={
+              <ProtectedRoute>
+                <AppLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="/dashboard" replace />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="project/:id" element={<ProjectDetails />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
+          
+          <Route path="/403" element={<Error403 />} />
+          <Route path="/500" element={<Error500 />} />
+          <Route path="*" element={<Error404 />} />
+        </Routes>
       </AntApp>
     </ConfigProvider>
   );

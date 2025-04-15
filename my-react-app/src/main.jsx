@@ -7,6 +7,10 @@ import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { LanguageProvider } from './context/LanguageContext'
 import { ThemeProvider } from './context/ThemeContext'
+import { suppressLibraryWarnings } from './utils/suppressWarnings'
+
+// Suppress specific library warnings
+suppressLibraryWarnings();
 
 // Note: removing StrictMode because it causes issues with react-beautiful-dnd
 // In a production app, you would want to handle this differently

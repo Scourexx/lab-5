@@ -183,6 +183,12 @@ export const translations = {
   },
 };
 
+// Define available languages
+export const availableLanguages = [
+  { value: 'en', label: 'English' },
+  { value: 'ru', label: 'Русский' },
+];
+
 const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
@@ -191,16 +197,34 @@ export const LanguageProvider = ({ children }) => {
     return savedLanguage || 'en';
   });
   
+  const changeLanguage = (lang) => {
+    setLanguage(lang);
+  };
+  
   const t = (key) => {
+    if (!key) return '';
+    
     const keys = key.split('.');
     let result = translations[language];
     
-    for (const k of keys) {
-      if (!result) return key;
-      result = result[k];
+    try {
+      for (const k of keys) {
+        if (!result || typeof result !== 'object') return key;
+        result = result[k];
+      }
+      
+      if (result === undefined) return key;
+      
+      if (typeof result === 'object') {
+        console.warn(`Translation key "${key}" resolved to an object instead of a string`);
+        return key;
+      }
+      
+      return result;
+    } catch (error) {
+      console.warn(`Translation error for key "${key}":`, error);
+      return key;
     }
-    
-    return result || key;
   };
   
   useEffect(() => {
@@ -208,7 +232,13 @@ export const LanguageProvider = ({ children }) => {
   }, [language]);
   
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ 
+      language, 
+      setLanguage, 
+      changeLanguage, 
+      t, 
+      availableLanguages 
+    }}>
       {children}
     </LanguageContext.Provider>
   );
