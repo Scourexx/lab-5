@@ -324,6 +324,8 @@ const ProjectDetails = () => {
               bordered 
               size="small" 
               column={{ xs: 1, sm: 2 }}
+              labelStyle={{ color: isDarkMode ? 'rgba(255, 255, 255, 0.65)' : 'rgba(0, 0, 0, 0.65)' }}
+              contentStyle={{ color: isDarkMode ? 'rgba(255, 255, 255, 0.95)' : 'rgba(0, 0, 0, 0.85)' }}
             >
               <Descriptions.Item label="Status">
                 <Tag {...renderStatusTag(project.status, isDarkMode)}>
@@ -346,7 +348,7 @@ const ProjectDetails = () => {
           <Col xs={24} md={8}>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
               <Statistic
-                title="Completion"
+                title={<span style={{ color: isDarkMode ? 'rgba(255, 255, 255, 0.65)' : 'rgba(0, 0, 0, 0.65)' }}>Completion</span>}
                 value={progressPercent}
                 suffix="%"
                 valueStyle={{ 
@@ -359,7 +361,10 @@ const ProjectDetails = () => {
       </Card>
       
       <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography.Title level={4}>Tasks</Typography.Title>
+        <Typography.Title level={4} style={{ 
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.95)' : 'rgba(0, 0, 0, 0.85)',
+          margin: 0
+        }}>Tasks</Typography.Title>
         <Button type="primary" icon={<PlusOutlined />} onClick={() => showTaskModal()}>
           {t('addTask')}
         </Button>

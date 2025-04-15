@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchProjects, addProject, updateProject, deleteProject, setFilterCriteria, clearFilters } from '../redux/projectsSlice';
 import { fetchTasks } from '../redux/tasksSlice';
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 import PageHeader from '../components/common/PageHeader';
 import ProjectCard from '../components/ui/ProjectCard';
 import ProjectForm from '../components/ui/ProjectForm';
@@ -22,6 +23,7 @@ const { Option } = Select;
 const Dashboard = () => {
   const dispatch = useDispatch();
   const { t } = useLanguage();
+  const { isDarkMode } = useTheme();
   const { projects, filteredProjects, loading, error } = useSelector(state => state.projects);
   const { allTasks } = useSelector(state => state.tasks);
   
@@ -95,6 +97,11 @@ const Dashboard = () => {
   
   const displayedProjects = filteredProjects;
   
+  // Custom statistic title style to ensure visibility in light mode
+  const statisticTitleStyle = {
+    color: isDarkMode ? 'rgba(255, 255, 255, 0.65)' : 'rgba(0, 0, 0, 0.65)'
+  };
+  
   return (
     <div>
       <PageHeader
@@ -125,16 +132,17 @@ const Dashboard = () => {
         <Col xs={24} sm={12} md={6}>
           <Card>
             <Statistic 
-              title="Total Projects"
+              title={<span style={statisticTitleStyle}>Total Projects</span>}
               value={projects.length}
-              prefix={<FundProjectionScreenOutlined />} 
+              prefix={<FundProjectionScreenOutlined />}
+              valueStyle={{ color: isDarkMode ? 'rgba(255, 255, 255, 0.95)' : undefined }}
             />
           </Card>
         </Col>
         <Col xs={24} sm={12} md={6}>
           <Card>
             <Statistic 
-              title="Active Projects"
+              title={<span style={statisticTitleStyle}>Active Projects</span>}
               value={activeProjects}
               prefix={<ClockCircleOutlined />}
               valueStyle={{ color: '#1890ff' }}
@@ -144,7 +152,7 @@ const Dashboard = () => {
         <Col xs={24} sm={12} md={6}>
           <Card>
             <Statistic 
-              title="Completed Projects"
+              title={<span style={statisticTitleStyle}>Completed Projects</span>}
               value={completedProjects}
               prefix={<CheckCircleOutlined />}
               valueStyle={{ color: '#52c41a' }}
@@ -154,7 +162,7 @@ const Dashboard = () => {
         <Col xs={24} sm={12} md={6}>
           <Card>
             <Statistic 
-              title="Task Completion"
+              title={<span style={statisticTitleStyle}>Task Completion</span>}
               value={totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0}
               suffix="%"
               precision={0}

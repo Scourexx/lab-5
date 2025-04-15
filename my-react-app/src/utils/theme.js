@@ -31,6 +31,8 @@ export const getThemeConfig = (mode) => {
       colorBgContainer: '#ffffff',
       colorBgElevated: '#fafafa',
       colorBorderSecondary: '#f0f0f0',
+      colorText: 'rgba(0, 0, 0, 0.85)',         // Darker text for better visibility
+      colorTextSecondary: 'rgba(0, 0, 0, 0.65)', // Darker secondary text
     })
   };
   

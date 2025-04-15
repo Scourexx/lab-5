@@ -1,6 +1,7 @@
 import { Space, Typography, Button, Tooltip } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../../context/ThemeContext';
 
 const { Title, Text } = Typography;
 
@@ -14,6 +15,7 @@ const PageHeader = ({
   tags,
 }) => {
   const navigate = useNavigate();
+  const { isDarkMode } = useTheme();
   
   const handleBack = () => {
     if (onBack) {
@@ -52,7 +54,10 @@ const PageHeader = ({
           )}
           <Title
             level={3}
-            style={{ margin: 0 }}
+            style={{ 
+              margin: 0,
+              color: isDarkMode ? 'rgba(255, 255, 255, 0.95)' : 'rgba(0, 0, 0, 0.85)' 
+            }}
           >
             {title}
           </Title>
@@ -67,7 +72,10 @@ const PageHeader = ({
       {subtitle && (
         <Text
           type="secondary"
-          style={{ marginBottom: '16px' }}
+          style={{ 
+            marginBottom: '16px',
+            color: isDarkMode ? 'rgba(255, 255, 255, 0.65)' : 'rgba(0, 0, 0, 0.65)'
+          }}
         >
           {subtitle}
         </Text>
